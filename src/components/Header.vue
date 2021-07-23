@@ -1,19 +1,14 @@
 <template>
-    <div @click="changeTheme" class="header">
-        <div class="header-left"></div>
-        <p class="header-title">someOne VUE</p>
-        <div @click.stop="accountClick" class="header-right"></div>
-    </div>
-    <!--    <div class="header" @click="changeTheme">-->
-    <!--        &lt;!&ndash;注意点: 不能直接插槽设置样式&ndash;&gt;-->
-    <!--        <div class="left">-->
-    <!--            <slot name="left">左边</slot>-->
-    <!--        </div>-->
-    <!--        <slot name="center">中间</slot>-->
-    <!--        <div class="right">-->
-    <!--            <slot name="right">右边</slot>-->
-    <!--        </div>-->
-    <!--    </div>-->
+        <div class="header" @click="changeTheme">
+            <!--注意点: 不能直接插槽设置样式-->
+            <div class="left">
+                <slot name="left">左边</slot>
+            </div>
+            <slot name="center">中间</slot>
+            <div class="right">
+                <slot name="right">右边</slot>
+            </div>
+        </div>
 </template>
 
 <script>
@@ -47,13 +42,16 @@ export default {
 
 <!--这里的告诉使用什么语言-->
 <style lang='scss' scoped>
+    body {
+        margin: 0;
+        padding: 0;
+    }
     // 报错问题
     //  error  in ./src/components/Header.vue?vue&type=style&index=0&id=61dd7a3d&scoped=true&lang=scss&
     // npm i postcss-pxtorem@4.0.1
     // 引入sass文件开始布局
     @import "../assets/css/mixin";
     @import "../assets/css/variable";
-
 
     .header {
         width: 100%;
@@ -63,23 +61,10 @@ export default {
         // 水平布局
         display: flex;
         justify-content: space-between;
-
-        .header-left, .header-right {
+        .left, .right {
             width: 84px;
             height: 84px;
             margin-top: 8px;
-            /**{*/
-            /*    width: 100%;*/
-            /*    height: 100%;*/
-            /*}*/
-        }
-
-        .header-title {
-            text-align: center;
-            line-height: 100%;
-            color: #ffff;
-            font-weight: bold;
-            @include font_size($font_medium);
         }
     }
 
