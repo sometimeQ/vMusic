@@ -1,0 +1,106 @@
+// 引入混合
+@import "./variable.scss";
+
+// 根据meta标签里面的 dpr计算font-siz，$font_size外部传入的变量，这里随便定义的
+@mixin font_dpr($font_size) {
+  font-size: $font_size;
+  // data-dpr是html里面的属性，属性选择器
+  [data-dpr='2'] & {
+    font-size: $font_size * 2
+  }
+;
+  [data-dpr='3'] & {
+    font-size: $font_size * 3
+  }
+;
+}
+
+/*
+  @mixin 指令允许我们定义一个可以在整个样式表中重复使用的样式
+  @include 指令可以将混入（mixin）引入到文档中
+  & 父类嵌套
+  通过该函数设置字体大小，后期方便统一管理
+*/
+@mixin font_size($size) {
+  @include font_dpr($size);
+}
+
+// 不换行
+@mixin no-wrap() {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+// 限制行数
+@mixin clamp($row) {
+  overflow: hidden;
+  // 省略号
+  text-overflow: ellipsis;
+  // 流水布局
+  display: -webkit-box;
+  // 子元素排列 vertical（竖排）
+  -webkit-box-orient: vertical;
+  // 用来限制在一个块元素显示的文本的行数
+  -webkit-line-clamp: $row;
+}
+
+// 根据属性选择器来设置背景颜色
+@mixin bg_color() {
+  background: $background-color-theme; // 默认网易红
+  [data-theme=theme1] & {
+    background: $background-color-theme1; // 默认QQ绿
+  }
+;
+  [data-theme=theme2] & {
+    background: $background-color-theme2; // 暗夜黑
+  }
+}
+
+// 底部子导航栏背景色
+@mixin bg_sub_color() {
+  background: $background-color-sub-theme;
+  [data-theme=theme1] & {
+    background: $background-color-sub-theme1;
+  }
+  [data-theme=theme2] & {
+    background: $background-color-sub-theme2;
+  }
+}
+
+// 字体默认颜色
+@mixin font_color() {
+  color: $font-color-theme;
+  [data-theme=theme1] & {
+    color: $font-color-theme1;
+  }
+  [data-theme=theme2] & {
+    color: $font-color-theme2;
+  }
+}
+
+// 点击字体激活颜色
+@mixin font_active_color() {
+  color: $font-active-color-theme;
+  [data-theme=theme1] & {
+    color: $font-active-color-theme1;
+  }
+  [data-theme=theme2] & {
+    color: $font-active-color-theme2;
+  }
+}
+
+// 边框颜色
+@mixin border_color() {
+  border-color: $border-color-theme;
+  [data-theme=theme1] & {
+    border-color: $border-color-theme1;
+  }
+  [data-theme=theme2] & {
+    border-color: $border-color-theme2;
+  }
+;
+}
+
+
+
