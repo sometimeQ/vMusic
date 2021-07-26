@@ -3,6 +3,9 @@
     <!--使用下面的组件-->
     <MainHeader></MainHeader>
     <Tabbar></Tabbar>
+
+    <!--指定路由的出口-->
+    <router-view></router-view>
   </div>
 </template>
 
