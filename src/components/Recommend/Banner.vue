@@ -1,8 +1,13 @@
 <template>
     <!--swiper的bug,如果数据是从网络获取的, 那么自动轮播到最后一页之后就不轮播了-->
     <!--只需要在swiper组件上面加上v-if="数据.length > 0"-->
-    <swiper :options="swiperOptions">
-        <swiper-slide>Slide 1</swiper-slide>
+    <swiper :options="swiperOptions" class="banner" v-if="banners.length > 0">
+        <!--key需要一个唯一的-->
+        <swiper-slide v-for="value in banners" :key="value.bannerId" class="item">
+            <a :href="value.url">
+                <img :src="value.pic" alt="">
+            </a>
+        </swiper-slide>
         <!--分页器-->
         <div class="swiper-pagination" slot="pagination"></div>
     </swiper>
@@ -10,9 +15,8 @@
 
 <script>
 // 引入第三方的插件,去github查看文档有全局和局部注册
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
-// import style (<= Swiper 5.x)
 import 'swiper/css/swiper.css'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 
 export default {
     name: 'Banner',
@@ -47,12 +51,39 @@ export default {
     },
     // 注册下
     components: {
-        swiper,
-        swiperSlide
+        Swiper,
+        SwiperSlide
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    .banner{
+        .item{
+            img{
+                // 设置图片的宽度，高度
+                width: 100%;
+                height: 300px;
+            }
+        }
+    }
+</style>
 
+
+<style lang="scss">
+@import "../../assets/css/mixin";
+/*注意点: 如果想覆盖swiper的样式, 那么style标签不能是scoped的, 否则无法覆盖*/
+    .banner{
+        // 小圆点
+        .swiper-pagination-bullet{
+            width: 16px;
+            height: 16px;
+            background: #ffff;
+            opacity: 1; // 透明度为1
+        }
+        // 激活状态下的
+        .swiper-pagination-bullet-active{
+            @include bg_color
+        }
+    }
 </style>
