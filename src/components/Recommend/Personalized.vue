@@ -9,6 +9,7 @@
                 <!--图片懒加载  Vue warn]: Failed to resolve directive: lazy-->
                 <img v-lazy="value.picUrl" alt="">
                 <p>{{value.name}}</p>
+                <!--图片懒加载  Vue warn]: Failed to resolve directive: lazys-->
             </div>
         </div>
     </div>
