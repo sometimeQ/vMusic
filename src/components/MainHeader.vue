@@ -45,7 +45,7 @@ export default {
         .header-title{
             margin-top: 5px;
             text-align: center;
-            line-height: 100px;
+            line-height: 84px;
             height: 84px;
             color: #ffff;
             font-weight: bold;
