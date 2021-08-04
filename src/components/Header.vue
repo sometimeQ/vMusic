@@ -41,11 +41,7 @@ export default {
 </script>
 
 <!--这里的告诉使用什么语言-->
-<style lang='scss' scoped>
-    body {
-        margin: 0;
-        padding: 0;
-    }
+<style scoped lang="scss">
     // 报错问题
     //  error  in ./src/components/Header.vue?vue&type=style&index=0&id=61dd7a3d&scoped=true&lang=scss&
     // npm i postcss-pxtorem@4.0.1

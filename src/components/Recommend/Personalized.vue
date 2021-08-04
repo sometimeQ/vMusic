@@ -4,14 +4,13 @@
             <h3>{{titles}}</h3>
         </div>
         <div class="personalized-list">
-            <div class="item" v-for="value in personalized" :key="value.id">
-<!--                <img :src="value.picUrl" alt="">-->
-                <!--图片懒加载  Vue warn]: Failed to resolve directive: lazy-->
-                <img v-lazy="value.picUrl" alt="">
-                <p>{{value.name}}</p>
-                <!--图片懒加载  Vue warn]: Failed to resolve directive: lazys-->
+            <!--点击事件, 监听按钮的点击-->
+            <div class="item" v-for="value in personalized" :key="value.id" @click="selectItem(value.id)">
+                    <!--图片懒加载  Vue warn]: Failed to resolve directive: lazy-->
+                    <img v-lazy="value.picUrl" alt="">
+                    <p>{{value.name}}</p>
             </div>
-        </div>
+         </div>
     </div>
 </template>
 
@@ -37,6 +36,25 @@ export default {
             type: Array,
             default: () => [],
             require: true,
+        },
+        type: {
+            type: String,
+            default: '',
+            required: true
+        }
+    },
+    // 自定义的方法
+    methods: {
+        selectItem (id) {
+            // console.log(id)
+            // console.log(this.type)
+            /**
+             * 1、父组件可以使用 props 把数据传给子组件。
+               2、子组件可以使用 $emit 触发父组件的自定义事件。
+               vm.$emit( event, arg ) //触发当前实例上的事件
+               vm.$on( event, fn );//监听event事件后运行 fn；
+             * **/
+            this.$emit('select', id, this.type)
         }
     }
 }
@@ -47,7 +65,7 @@ export default {
 @import "../../assets/css/variable";
 
     .personalized{
-        margin-top: -70px;
+        //margin-top:x
         @include bg_sub_color();
         .personalized-top{
             width: 100%;
@@ -82,7 +100,7 @@ export default {
                     @include font_size($font_medium_s);
                     @include font_color;
                     text-align: center;
-                    margin-top: -10px;
+                    margin-top: 10px;
                 }
             }
         }

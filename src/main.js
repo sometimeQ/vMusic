@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+// 引入全局的样式,解决frame不对
+import './assets/css/base.css'
 import VueLazyload from 'vue-lazyload'
 
 

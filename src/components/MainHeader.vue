@@ -25,7 +25,7 @@ export default {
     methods: {
         accountClick () {
             // 跳转路由
-
+            console.log('看看是否点击了反应')
         }
     }
 }
@@ -37,16 +37,19 @@ export default {
 
     .header{
         .header-left{
-            @include bg_img('../assets/images/logo')
+            @include bg_img('../assets/images/logo');
+            width: 84px;
+            height: 84px;
         }
         .header-right{
-            @include bg_img('../assets/images/account')
+            @include bg_img('../assets/images/account');
+            width: 84px;
+            height: 84px;
         }
         .header-title{
             margin-top: 5px;
             text-align: center;
             line-height: 84px;
-            height: 84px;
             color: #ffff;
             font-weight: bold;
             @include font_size($font_medium)

@@ -16,6 +16,11 @@ const Recommend = (resolve) => {
     resolve(module)
   })
 }
+const Detail = (resolve) => {
+  import('../views/Detail').then((module) => {
+    resolve(module)
+  })
+}
 const Singer = (resolve) => {
   import('../views/Singer').then((module) => {
     resolve(module)
@@ -36,7 +41,17 @@ Vue.use(VueRouter)
 // 配置路由
 const routes = [
     {path: '/', redirect: 'recommend/'}, // 默认跳转到第一个
-    { path: '/recommend', component: Recommend },
+    { path: '/recommend',
+      component: Recommend,
+      // 二级路由
+      children: [
+        {
+          // 跳转到详情界面, 传递的参数
+          path: 'detail/:id/:type', // 太坑了，'/detail/:id/:type',多了一个/没有跳转过去
+          component: Detail,
+        }
+      ],
+    },
     { path: '/singer', component: Singer},
     { path: '/rank', component: Rank},
     { path: '/search', component: Search},
