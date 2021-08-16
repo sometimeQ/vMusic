@@ -1,15 +1,17 @@
 <template>
-    <div class="mini-player">
+    <!--控制 isShowMiniPlayer 是否显示，这里绑定的是mapGetters里面的全局变量，即属性-->
+    <div class="mini-player" v-show="isShowMiniPlayer">
         <div class="player-wrapper">
             <div class="mini-left">
-                <img src="https://p2.music.126.net/kQEL3K6v4NissqBkuXI3Jw==/109951166186628307.jpg" alt="">
+<!--                <img src="https://p2.music.126.net/kQEL3K6v4NissqBkuXI3Jw==/109951166186628307.jpg" alt="" ref="cd">-->
+                <img :src="currentSong.picUrl" ref="cd">
                 <div class="player-title">
-                    <h3>xxxxx</h3>
-                    <p>描述文件</p>
+                    <h3>{{currentSong.name}}</h3>
+                    <p>{{currentSong.singer}}</p>
                 </div>
             </div>
             <div class="mini-right">
-                <div class="play"></div>
+                <div class="play" @click="play" ref="play"></div>
                 <!--阻止事件冒泡  @click.stop-->
                 <div class="list" @click.stop="showList"></div>
             </div>
@@ -18,11 +20,56 @@
 </template>
 
 <script>
+import {mapGetters, mapActions} from 'vuex'
 export default {
     name: 'MiniPlayer',
     methods: {
+        // 映射本地的方法
+        ...mapActions([
+            /*
+            这里映射的这个方法是actions.js里面的以下方法,该方法也触发了mutations内部的方法,详见vuex mapAction
+            setListPlayer({commit}, flag) {
+                // 触发mutatioons里面的方法 commit固定于法
+                commit(SET_LIST_PLAYER, flag)
+            }
+           */
+            'setListPlayer',
+            // 'setMiniPlayer',
+            'setIsPlaying'
+        ]),
         showList () {
-            console.log('点击啦更多的列表')
+            // console.log('点击啦更多的列表')
+            this.setListPlayer(true)
+            // 隐藏迷你播放器
+            // this.setMiniPlayer(false)
+        },
+        // 顶部标签绑定的方法
+        play () {
+            this.setIsPlaying(!this.isPlaying)
+        }
+    },
+    // 计算属性
+    computed: {
+        ...mapGetters([
+            // 映射本地的属性
+            'isShowMiniPlayer',
+            'isPlaying',
+            'currentSong'
+        ])
+    },
+    // 实时监听isPlaying的属性状态
+    watch: {
+        isPlaying (newValue) {
+            // 改变播放图标状态
+            if (newValue) {
+                // 图片旋转状态
+                this.$refs.cd.classList.add('active')
+                // 播放图标装填
+                this.$refs.play.classList.add('active')
+            } else {
+                this.$refs.cd.classList.remove('active')
+                this.$refs.play.classList.remove('active')
+            }
         }
     }
 }
@@ -99,4 +146,13 @@ export default {
         }
     }
 
+    // 动画
+    @keyframes sport {
+        from{
+            transform: rotate(0deg);
+        }
+        to{
+            transform: rotate(360deg);
+        }
+    }
 </style>

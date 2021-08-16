@@ -15,3 +15,7 @@ export const getPlayList = (data) => Network.get('playlist/detail', data)
 export const getSongDetail = (data) => Network.get('song/detail', data)
 // 最新专辑详情页面网络请求接口
 export const getAlbum = (data) => Network.get('album', data)
+// 获取音乐歌词列表的接口
+export const getSongLyric = (data) => Network.get('lyric', data)
+// 获取歌曲的播放地址url
+export const getSongURL = (data) => Network.get('song/url', data)

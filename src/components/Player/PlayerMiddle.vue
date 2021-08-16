@@ -2,27 +2,23 @@
     <swiper :options="swiperOption" class="banner">
         <!--转盘-->
         <swiper-slide class="cd">
-            <!--外面的转盘-->
-           <div class="cd-wrapper">
+            <!--外面的转盘 ref 绑定一个获取元素-->
+           <div class="cd-wrapper" ref="cdWrapper">
                <!--里面的图片-->
-               <img src="" alt="">
+<!--               <img src="http://p1.music.126.net/G9zHEGlfLM-P7Ve29mo6tA==/109951166250020573.jpg" alt="">-->
+               <img :src="currentSong.picUrl" alt="">
            </div>
-            <p>这里是描述</p>
+            <p>{{getFirstLyric}}</p>
         </swiper-slide>
         <!--歌词-->
         <swiper-slide class="lyric">
             <!--这里能滚动的歌词-->
             <ScrollView>
                 <ul>
-                    <li>xxxxxxxxxxxxxx</li>
-                    <li>xxxxxxxxxxxxxx</li>
-                    <li>xxxxxxxxxxxxxx</li>
-                    <li>xxxxxxxxxxxxxx</li>
-                    <li>xxxxxxxxxxxxxx</li>
-                    <li>xxxxxxxxxxxxxx</li>
-                    <li>xxxxxxxxxxxxxx</li>
-                    <li>xxxxxxxxxxxxxx</li>
-
+<!--                    :class="{'active' : currentLineNum === key}"-->
+                    <li v-for="(value, key) in currentLyric" :key="key" >{{value}}</li>
+<!--                    <li>xxxxxxxxxxxxxx</li>-->
+<!--                    <li>xxxxxxxxxxxxxx</li>-->
                 </ul>
             </ScrollView>
         </swiper-slide>
@@ -36,6 +32,8 @@
 import 'swiper/css/swiper.css'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import ScrollView from '../ScrollView'
+import {mapGetters} from 'vuex'
+
 export default {
     name: 'PlayerMiddle',
     data () {
@@ -55,14 +53,47 @@ export default {
             currentLineNum: '0'
         }
     },
+    // 自定义的方法
+    methods: {
+        getFirstLyric () {
+            // 只需要第一段话
+
+        }
+    },
     // 注册下
     components: {
         Swiper,
         SwiperSlide,
         ScrollView,
     },
-    methods: {
-
+    // getter setter
+    computed: {
+        ...mapGetters([
+            'isPlaying',
+            'currentSong',
+            'currentLyric',
+        ])
+    },
+    // 实时监听变化即触发
+    watch: {
+        // 这个是上面mapGetter里面的方法 isPlaying
+        // 新值，旧值
+        isPlaying(newValue, oldValue) {
+            // console.log(newValue)
+            // console.log(oldValue)
+            // console.log('.采购员法')
+            // 获取原生的元素, 上面的监听会返回新值是否发生变化
+            if (newValue) {
+                this.$refs.cdWrapper.classList.add('active')
+            } else {
+                this.$refs.cdWrapper.classList.remove('active')
+            }
+        }
+    },
+    mounted () {
+        console.log('xxxmmmm')
+        console.log(this.currentLyric)
+        console.log('kkkkkk')
     }
 }
 </script>
@@ -87,7 +118,8 @@ export default {
                 height: 500px;
                 border-radius: 50%;
                 border: 30px solid #fff;
-                background: purple;
+                /*background: purple;*/
+                overflow: hidden;
                 // 动画
                 animation: sport 3s linear infinite;
                 animation-play-state: paused;
@@ -97,7 +129,8 @@ export default {
                 }
                 // 圆圈里面的图片
                 img{
-
+                    width: 100%;
+                    height: 100%;
                 }
             }
             p{
@@ -115,6 +148,16 @@ export default {
                 @include font_color;
                 margin: 10px 0;
             }
+        }
+    }
+
+    // 动画
+    @keyframes sport {
+        from{
+            transform: rotate(0deg);
+        }
+        to{
+            transform: rotate(360deg);
         }
     }
 </style>

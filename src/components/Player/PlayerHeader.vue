@@ -1,20 +1,37 @@
 <template>
     <div class="header">
-        <div class="header-left"></div>
+        <div class="header-left" @click.stop="hiddenNormalPlayer"></div>
         <div class="center">
-            <h3>xxxxx</h3>
-            <p>1111</p>
+            <h3>{{currentSong.name}}</h3>
+            <p>{{currentSong.singer}}</p>
         </div>
         <div class="header-right"></div>
     </div>
 </template>
 
 <script>
-
+// 导入全局的
+import {mapActions, mapGetters} from 'vuex'
 export default {
     name: 'PlayerHeader',
-    components: {
-
+    methods: {
+        // 映射方法
+        ...mapActions([
+            'setFullScreen',
+            'setMiniPlayer'
+        ]),
+        hiddenNormalPlayer () {
+            console.log('隐藏')
+            // 通过简写方式来调用方法，属性等操作,出发内部方法
+            this.setFullScreen(false)
+            // 显示迷你播放器界面
+            this.setMiniPlayer(true)
+        }
+    },
+    computed: {
+      ...mapGetters([
+            'currentSong'
+      ])
     }
 }
 </script>

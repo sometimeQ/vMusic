@@ -26,15 +26,17 @@ export default {
         }
     },
     methods: {
-        // 映射方法简写
+        // 映射方法简写, 这里的是actions.js里面的方法，vuex
         ...mapActions([
-            'setFullScreen', // 将this.setFullScreen() 映射成为this.stroe.dispatch('setFullScreen')
-            'setSongDetail'
+            // 将this.setFullScreen() 映射成为this.stroe.dispatch('setFullScreen')
+            'setFullScreen',
+            'setSongDetail',
         ]),
         // 提供给外界调用的方法
         selectMusic(id) {
-            // 映射方法
+            // 映射方法,控制播放界面是否显示
             this.setFullScreen(true)
+            // 映射进入播放界面的的接口方法
             this.setSongDetail([id])
         }
     }

@@ -63,6 +63,13 @@ export default {
                 // console.log(this.y)
                 fn(this.y)
             })
+        },
+        // 提供给外界刷新下，不然滚动不了
+        refresh () {
+            // 延迟几秒加载完毕刷新
+            setTimeout(() => {
+                this.iscroll.refresh()
+            }, 100)
         }
     }
 }
