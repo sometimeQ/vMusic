@@ -24,8 +24,9 @@
                                     <p>{{value.name}}</p>
                                 </div>
                                 <div class="item-right">
-                                    <div class="item-favorite" @click="favorite"></div>
-                                    <div class="item-del" @click.stop="del(index)"></div>
+                                    <!--绑定类名  value 是绑定的每一首歌-->
+                                    <div class="item-favorite" @click.stop="favorite(value)" :class="{'active': isFavorite(value)}"></div>
+                                    <div class="item-del" @click.stop="del(index, value)"></div>
                                 </div>
                             </li>
 <!--                            <li class="item">-->
@@ -67,7 +68,9 @@ export default {
             'setModeType',
             'setIsPlaying',
             'setCurrentIndex',
-            'setDelSong'
+            'setDelSong',
+            'setFavoriteSong',
+            'setDelFavoriteSongFromeList',
         ]),
         hidden () {
             // console.log('点击啦关闭按钮')
@@ -84,17 +87,31 @@ export default {
             this.setCurrentIndex(index)
         },
         // 删除
-        del(index) {
+        del(index, value) {
             // 删除远端的vue3存储的数据
             this.setDelSong(index)
             // 默认触发,解决第一首歌不播放的问题
             if (index === 0) {
                 this.$emit('select')
             }
+            // 从本地数组中删除
+            this.setDelFavoriteSongFromeList(value)
+
         },
         // 收藏，或者是喜欢
-        favorite () {
-
+        favorite (value) {
+            // 传递保存
+            this.setFavoriteSong(value)
+        },
+        // 判断是否该显示
+        isFavorite (value) {
+            // console.log(value)
+            // console.log('这里传递的是什么')
+            // 判断本地的缓存收藏数组中是否存在
+            let result = this.favoriteList.find(function (currentValue) {
+                return currentValue.id === value.id
+            })
+            return result !== undefined
         },
         // 进入动画
         enter (el, done) {
@@ -133,6 +150,8 @@ export default {
             'isPlaying',
             'songs',
             'currentIndex',
+            'currentSong',
+            'favoriteList',
         ])
     },
     // 监听值改变

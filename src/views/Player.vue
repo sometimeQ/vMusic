@@ -13,6 +13,8 @@ import MiniPlayer from '../components/Player/MiniPlayer'
 import ListPlayer from '../components/Player/ListPlayer'
 import mode from '../store/modeType'
 import {mapGetters, mapActions} from 'vuex'
+// 引入工具类
+import {setLocalStorage, getLocalStorage, getRandomIntInclusive} from '../tools/tools'
 export default {
     name: 'Player',
     components: {
@@ -27,9 +29,12 @@ export default {
         }
     },
     methods: {
-        ...mapActions(
-            ['setCurrentIndex']
-        ),
+        ...mapActions([
+            'setCurrentIndex',
+            'setHistorySong',
+            'setHistoryList',
+            'setFavoriteList',
+        ]),
         play () {
             // console.log('ccccc')
             if (this.currentIndex === 0) {
@@ -60,7 +65,7 @@ export default {
                 this.$refs.audio.play()
             } else if (this.modeType === mode.random) {
                 // 随机播放的方法
-                let index = this.getRandomIntInclusive(0, this.songs.length - 1)
+                let index = getRandomIntInclusive(0, this.songs.length - 1)
                 this.setCurrentIndex(index)
             }
         }
@@ -72,17 +77,21 @@ export default {
             'currentIndex',
             'modeType',
             'songs',
-            'curTime'
+            'curTime',
+            'favoriteList',
+            'historyList'
         ])
     },
     watch: {
         // 只要观察属性变化即开始播放音乐
         isPlaying (newVaule, oldValue) {
             if (newVaule) {
-                console.log('播放了')
+                // console.log('播放了')
+                // 只要是播放就加入播放历史记录
+                this.setHistorySong(this.currentSong)
                 this.$refs.audio.play()
             } else {
-                console.log('暂停了')
+                // console.log('暂停了')
                 this.$refs.audio.pause()
             }
         },
@@ -111,6 +120,8 @@ export default {
                 this.totalTime = this.$refs.audio.duration
                 // 判断当前的歌曲是否正在播放
                 if (this.isPlaying) {
+                    // 加入播放历史记录
+                    this.setHistorySong(this.currentSong)
                     console.log('currentIndex变化 ==> 播放了')
                     this.$refs.audio.play()
                 } else {
@@ -118,14 +129,41 @@ export default {
                     this.$refs.audio.pause()
                 }
             }
+        },
+        // 同下可证
+        favoriteList (newValue) {
+            setLocalStorage('favoriteList', newValue)
+        },
+        // 只要这个属性发生了变化就把发生变化的值存入到本地，因为上面只是是添加到数组,还没存入本地
+        historyList (newValue) {
+            // console.log('历史记录发生了变化' + newValue)
+            setLocalStorage('historyList', newValue)
         }
     },
     mounted () {
         // 页面初始化完成后,获取默认的播放时间
         this.$refs.audio.ondurationchange = () => {
-            console.log('xx1')
+            // console.log('xx1')
             console.log(this.$refs.audio.duration)
             this.totalTime = this.$refs.audio.duration
+        }
+    },
+    created () {
+        // console.log('什么情况')
+        // 取出本地历史记录或者收藏等，便于浏览器删除之后，图标还显示
+        let favoriteList = getLocalStorage('favoriteList')
+        // 第一次或许本地没有存储值
+        if (favoriteList !== null) {
+            // 取出来后设置回去数组，后面的值就能读取到了
+            this.setFavoriteList(favoriteList)
+        }
+
+        // 取出播放记录
+        let historyList = getLocalStorage('historyList')
+        if (historyList !== null) {
+            // console.log('这里是空')
+            // console.log(historyList + 'historyList')
+            this.setHistoryList(historyList)
         }
     }
 }

@@ -29,6 +29,7 @@ export const formartTime = (time) => {
 }
 // 设置本地历史记录
 export const setLocalStorage = (key, value) => {
+    // 转换成字符串存入
     window.localStorage.setItem(key, JSON.stringify(value))
 }
 // 获取本地存储的记录

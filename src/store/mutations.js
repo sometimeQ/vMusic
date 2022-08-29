@@ -9,6 +9,11 @@ import {
     SET_CURRENT_INDEX,
     SET_DEL_SONG,
     SET_CURRENT_TIME,
+    SET_FAVORITE_SONG,
+    SET_FAVORITE_LIST,
+    SET_HISTORY_SONG,
+    SET_HISTORY_LIST,
+    SET_DELFAVORITESONG,
 } from './mutations-type'
 
 // 用于保存修改全局共享的数据的方法  state里面的
@@ -68,7 +73,7 @@ export default {
         } else if (index > state.songs.length - 1) {
             index = 0
         }
-        console.log('SET_CURRENT_INDEX' + '' + index)
+        // console.log('SET_CURRENT_INDEX' + '' + index)
         state.currentIndex = index
     },
     // 删除songs里面的数据
@@ -100,5 +105,52 @@ export default {
     // 设置当前音乐播放的时间
     [SET_CURRENT_TIME] (state, time) {
         state.curTime = time
+    },
+    // 把当前歌曲加入到收藏当中
+    [SET_FAVORITE_SONG] (state, song) {
+        // 排重
+        let result = state.favoriteList.find(function (currentValue) {
+            // 判断id
+            return currentValue.id === song.id
+        })
+        // 如果没有则添加到数组
+        if (result === undefined) {
+            state.favoriteList.push(song)
+        }
+    },
+    // 删除本地数组中存在的歌曲信息
+    [SET_DELFAVORITESONG] (state, song) {
+        // console.log(song.id + '\n' + '看看传入的什么鬼')
+        if (state.favoriteList.length <= 0) {
+            return
+        }
+        // 删除一个匹配到的元素，返回一个新数组
+        let newLists = state.favoriteList.filter(function check(value) {
+            return value.id != song.id
+        })
+        state.favoriteList = newLists
+    },
+    // 设置当前的收藏数组歌曲
+    [SET_FAVORITE_LIST] (state, list) {
+        state.favoriteList = list
+    },
+    // 把当前播放的歌曲加入到播放历史记录的数组里面
+    [SET_HISTORY_SONG] (state, song) {
+        // 排重
+        let result = state.historyList.find(function (currentSong) {
+            return currentSong.id === song.id
+        })
+        if (result === undefined) {
+            if (state.historyList.length > 30) {
+                // 大于了30条记录，则从最后一个删除
+                state.historyList.splice(0, 1)
+            }
+            // 加入到播放历史记录数组
+            state.historyList.push(song)
+        }
+    },
+    // 取出当前播放的历史记录数组
+    [SET_HISTORY_LIST] (state, list) {
+        state.historyList = list
     },
 }

@@ -8,17 +8,16 @@
 <!--               <img src="http://p1.music.126.net/G9zHEGlfLM-P7Ve29mo6tA==/109951166250020573.jpg" alt="">-->
                <img :src="currentSong.picUrl" alt="">
            </div>
-            <p>{{getFirstLyric}}</p>
+            <p>{{getFirstLyric()}}</p>
         </swiper-slide>
         <!--歌词-->
-        <swiper-slide class="lyric">
+        <swiper-slide class="lyric" ref="lyric">
             <!--这里能滚动的歌词-->
-            <ScrollView>
+            <ScrollView ref="scrollView">
                 <ul>
-<!--                    :class="{'active' : currentLineNum === key}"-->
-                    <li v-for="(value, key) in currentLyric" :key="key" >{{value}}</li>
-<!--                    <li>xxxxxxxxxxxxxx</li>-->
-<!--                    <li>xxxxxxxxxxxxxx</li>-->
+                    <!--:class="{'active' : currentLineNum === key}"  绑定一个类名显示高亮状态-->
+                    <li v-for="(value, key) in currentLyric" :key="key" :class="{'active' : currentLineNum === key}">{{key}}---{{value}}</li>
+                    <!--<li>xxxxxxxxxxxxxx</li>-->
                 </ul>
             </ScrollView>
         </swiper-slide>
@@ -50,14 +49,45 @@ export default {
                 observeParents: true,
                 observeSlideChildren: true
             },
+            // 定义一个变量来接收高亮状态下的值
             currentLineNum: '0'
+        }
+    },
+    // 父控件传递过来的歌曲播放的时间
+    props: {
+        currentTime: {
+            type: Number,
+            default: 0,
+            require: true,
         }
     },
     // 自定义的方法
     methods: {
         getFirstLyric () {
-            // 只需要第一段话
-
+            // 只需要第一段话,第一句歌词
+            for (let key in this.currentLyric) {
+                // console.log(this.currentLyric)
+                // console.log(this.currentLyric[key])
+                return this.currentLyric[key]
+            }
+        },
+        // 提供一个外界的方法递归查找
+        getActiveLineNum (lineNum) {
+            // 吐过传递进来的行数不存在
+            if (lineNum < 0) {
+                // 返回默认的行数
+                return this.currentLineNum
+            }
+            // 取出value,转换字符串
+            let result = this.currentLyric[lineNum + '']
+            // 如果是空的
+            if (result === undefined || result === '') {
+                // 代表不存在继续遍历,查找上一行的歌曲
+                lineNum--
+                return this.getActiveLineNum(lineNum)
+            } else {
+                return lineNum + ''
+            }
         }
     },
     // 注册下
@@ -88,12 +118,55 @@ export default {
             } else {
                 this.$refs.cdWrapper.classList.remove('active')
             }
+        },
+        // 当播放歌曲的时间改变后就读取 props 里面的currentTime 是父控件传递下来的值
+        currentTime (newValue) {
+            // console.log('播放时间改变啦')
+            /*
+            // 1.高亮歌词同步
+            let lineNum = Math.floor(newValue) + ''
+            let result = this.currentLyric[lineNum]
+            if (result !== undefined && result !== '') {
+                this.currentLineNum = lineNum
+                // 2.歌词滚动同步
+                let currentLyricTop = document.querySelector('li.active').offsetTop
+                let lyricHeight = this.$refs.lyric.$el.offsetHeight
+                 if (currentLyricTop > lyricHeight / 2) {
+                     console.log('开始滚动')
+                     this.$refs.scrollView.scrollTo(0, lyricHeight / 2 - currentLyricTop, 100)
+                 }
+            }
+             */
+
+            // 1.高亮歌词同步,超过多少范围就自动轮播,向上滚动
+            let lineNum = Math.floor(newValue)
+            // 递归查找,排除某个时间段位空的key,这里是点击进度条,需要立即同步歌词的状态
+            this.currentLineNum = this.getActiveLineNum(lineNum)
+            // 2.歌词滚动同步
+            let currentLyricTop = document.querySelector('.lyric .active').offsetTop
+            // console.log(document.querySelector('.lyric .active'))
+            // console.log(currentLyricTop)
+            // console.log('xxxx')
+            // 获取当前容器标签的高度
+            let lyricHeight = this.$refs.lyric.$el.offsetHeight
+            // console.log(lyricHeight)
+            // 如果当前歌词的高度大于了当前容器高度的一半就开始滚动
+            if (currentLyricTop > lyricHeight / 2) {
+                // 差值就是需要滚动的
+                this.$refs.scrollView.scrollTo(0, lyricHeight / 2 - currentLyricTop, 100)
+            } else {
+                // 如果往回点就恢复到原来的位置
+                this.$refs.scrollView.scrollTo(0, 0, 100)
+            }
+        },
+        // 当歌词时间改变后，实时获取歌词的key,value，绑定便于高亮显示
+        currentLyric () {
+            // 绑定函数与key
+            for (let key in this.currentLyric) {
+                this.currentLineNum = key
+                return
+            }
         }
-    },
-    mounted () {
-        console.log('xxxmmmm')
-        console.log(this.currentLyric)
-        console.log('kkkkkk')
     }
 }
 </script>
@@ -147,6 +220,14 @@ export default {
                 @include font_size($font_medium);
                 @include font_color;
                 margin: 10px 0;
+                &:last-of-type {
+                    // 才能有效的滚动，显示完全
+                    padding-bottom: 50%;
+                }
+                // 歌词高亮效果
+                &.active{
+                    color: #ffffff;
+                }
             }
         }
     }

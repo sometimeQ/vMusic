@@ -7,7 +7,7 @@
           <!--容器-->
           <div class="player-wrapper">
               <PlayerHeader></PlayerHeader>
-              <PlayerMiddle></PlayerMiddle>
+              <PlayerMiddle :currentTime="currentTime"></PlayerMiddle>
               <PlayerBottom :totalTime="totalTime" :currentTime="currentTime"></PlayerBottom>
           </div>
           <!--背景-->
@@ -51,7 +51,8 @@ export default {
     methods: {
         // 哪些方法映射成为局部的的方法
         ...mapActions([
-
+            // 获取歌词信息映射的接口
+            'getSongLyric'
         ]),
         // 进入的动画
         enter (el, done) {
@@ -80,6 +81,17 @@ export default {
             'isFullScreen',
             'currentSong', // 获取当前播放的歌曲
         ])
+    },
+    // 观察者变化值
+    watch: {
+        // 只要当前播放歌曲信息变化了，即传入id调用歌词
+        currentSong (newId) {
+            if (newId.id === undefined) {
+                return
+            }
+            // 调用歌词信息接口方法
+            this.getSongLyric(newId.id)
+        }
     }
 }
 </script>

@@ -24,8 +24,9 @@ export default {
     // 实现自定义的方法
     methods: {
         accountClick () {
-            // 跳转路由
-            console.log('看看是否点击了反应')
+            // 跳转路由,拿到router地址跳转
+            // console.log('看看是否点击了反应')
+            this.$router.push('/account')
         }
     }
 }

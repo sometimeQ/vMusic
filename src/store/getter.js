@@ -53,4 +53,12 @@ export default {
     curTime (state) {
         return state.curTime
     },
+    // 获取当前收藏的数组
+    favoriteList (state) {
+        return state.favoriteList
+    },
+    // 回去当前播放的历史记录
+    historyList (state) {
+        return state.historyList
+    },
 }

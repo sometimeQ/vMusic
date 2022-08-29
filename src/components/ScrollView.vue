@@ -70,6 +70,10 @@ export default {
             setTimeout(() => {
                 this.iscroll.refresh()
             }, 100)
+        },
+        // 提供外界方法用于歌词滚动
+        scrollTo (x, y, t) {
+            this.iscroll.scrollTo(x, y, t)
         }
     }
 }

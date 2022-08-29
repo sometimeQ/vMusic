@@ -1,3 +1,4 @@
+// 引入获取接口api信息
 import {
     getSongDetail,
     getSongURL,
@@ -16,6 +17,11 @@ import {
     SET_CURRENT_INDEX,
     SET_DEL_SONG,
     SET_CURRENT_TIME,
+    SET_FAVORITE_SONG,
+    SET_FAVORITE_LIST,
+    SET_HISTORY_SONG,
+    SET_HISTORY_LIST,
+    SET_DELFAVORITESONG,
 } from './mutations-type'
 
 // 用于保存触发mutations中保存的方法的方法
@@ -77,15 +83,17 @@ export default {
             list.push(obj)
         })
         // 触发mutations里面的数据，穿日数据过去修改
-        console.log(list)
+        // console.log(list)
         commit(SET_SONG_DETAIL, list)
     },
     // 触发mutations.js里面的当前播放的歌词
     async getSongLyric ({commit}, id) {
         // 请求歌词接口信息
         let result = await getSongLyric({id: id})
+        // console.log(result.lrc.lyric)
         // 解析歌词
         let obj = parseLyric(result.lrc.lyric)
+        // console.log(obj + 'zxx')
         commit(SET_SONG_LYRIC, obj)
     },
     // 设置当前的索引
@@ -99,11 +107,31 @@ export default {
     // 设置当前播放的时间
     setCurrentTime ({commit}, time) {
         commit(SET_CURRENT_TIME, time)
-    }
-}
+    },
+    // 设置存入歌曲到收藏的数组中
+    setFavoriteSong ({commit}, song) {
+        commit(SET_FAVORITE_SONG, song)
+    },
+    // 存入数组
+    setFavoriteList ({commit}, list) {
+        commit(SET_FAVORITE_LIST, list)
+    },
+    // 删除收藏的歌曲
+    setDelFavoriteSongFromeList ({commit}, song) {
+        commit(SET_DELFAVORITESONG, song)
+    },
+    // 设置当前播放的歌曲存入本地的历史记录
+    setHistorySong ({commit}, song) {
+        commit(SET_HISTORY_SONG, song)
+    },
+    // 获取
+    setHistoryList({commit}, list) {
+        commit(SET_HISTORY_LIST, list)
+    },
 
+}
+// 格式化歌词的方法
 function parseLyric (lrc) {
-    // 解析歌词
     let lyrics = lrc.split('\n')
     // [00:00.000] 作曲 : 林俊杰
     // 1.定义正则表达式提取[00:00.000]

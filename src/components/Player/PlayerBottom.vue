@@ -20,7 +20,9 @@
             <div class="prev" @click="prev"></div>
             <div class="play" @click="play" ref="play"></div>
             <div class="next" @click="next"></div>
-            <div class="favorite"></div>
+            <!--绑定类名 :class,需要一个对象-->
+            <!--这个地方的数据 isFavorite(currentSong)  currentSong绑定的是mapGetter里面的属性-->
+            <div class="favorite" @click.stop="favorite" :class="{'active' : isFavorite(currentSong)}"></div>
         </div>
     </div>
 </template>
@@ -49,7 +51,8 @@ export default {
             'setIsPlaying',
             'setModeType',
             'setCurrentIndex',
-            'setCurrentTime'
+            'setCurrentTime',
+            'setFavoriteSong',
         ]),
         // 上面标签绑定的方法
         play () {
@@ -99,6 +102,25 @@ export default {
             let currentTime = this.totalTime * value
             // 保存
             this.setCurrentTime(currentTime)
+        },
+        // 收藏图标的点击事件
+        favorite () {
+            // console.log(this.currentSong)
+            // console.log('完毕')
+
+            // 点击的这首歌存入本地
+            this.setFavoriteSong(this.currentSong)
+        },
+        isFavorite (song) {
+            // console.log(song)
+            // console.log('收工')
+            // 从数组取出来判断
+            let result = this.favoriteList.find(function (currentS) {
+                return currentS.id === song.id
+            })
+            // console.log(result)
+            // console.log('mmmmm')
+            return result !== undefined
         }
     },
     computed: {
@@ -106,7 +128,9 @@ export default {
         ...mapGetters([
             'isPlaying',
             'modeType',
-            'currentIndex'
+            'currentIndex',
+            'currentSong',
+            'favoriteList'
         ])
     },
     // 实时监听状态改变

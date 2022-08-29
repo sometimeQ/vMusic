@@ -40,8 +40,6 @@ export default {
         showList () {
             // console.log('点击啦更多的列表')
             this.setListPlayer(true)
-            // 隐藏迷你播放器
-            // this.setMiniPlayer(false)
         },
         // 顶部标签绑定的方法
         play () {

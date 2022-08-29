@@ -23,5 +23,9 @@ export default {
     // 获取当前播放音乐的歌词
     currentLyric: {},
     // 当前播放的时间
-    curTime: 0
+    curTime: 0,
+    // 收藏的歌曲历史
+    favoriteList:[],
+    // 播放歌曲的历史
+    historyList: [],
 }
