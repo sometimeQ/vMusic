@@ -10,6 +10,8 @@ import Rank from '../views/Rank'
 import Search from '../views/Search'
 */
 
+
+
 // 按需加载组件，使用的时候才加载
 const Recommend = (resolve) => {
   import('../views/Recommend').then((module) => {
